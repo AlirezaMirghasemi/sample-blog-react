@@ -9,7 +9,7 @@ const PostEdit = () => {
   const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState(null);
   const [postId, setPostId] = useState(useParams().id);
-  const navigate=useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (postId) {
@@ -19,7 +19,6 @@ const PostEdit = () => {
           setPostTitle(data.title);
           setPostContent(data.body);
           setLoading(false);
-
         })
         .catch((error) => {
           setErrors(error);

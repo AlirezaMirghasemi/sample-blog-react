@@ -36,7 +36,7 @@ const Post = () => {
       )}
       {errors && <div>Error: {errors.message}</div>}
       {post === null && <div>No posts found.</div>}
-      {post !=null && (
+      {post != null && (
         <>
           <PostHeader title={post.title} subTitle={""} />
           <article className="mb-4">
@@ -45,11 +45,13 @@ const Post = () => {
                 <div className="col-md-10 col-lg-8 col-xl-7">
                   <p>{post.body}</p>
                 </div>
-                <Link className="btn btn-info" to={`/post/edit/${post.id}`} > Edit </Link>
-                <PostDelete id={post.id}/>
+                <Link className="btn btn-info" to={`/post/edit/${post.id}`}>
+                  {" "}
+                  Edit{" "}
+                </Link>
+                <PostDelete id={post.id} />
               </div>
             </div>
-
           </article>
         </>
       )}

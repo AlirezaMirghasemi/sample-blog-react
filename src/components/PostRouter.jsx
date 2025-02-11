@@ -23,13 +23,13 @@ const PostRouter = createBrowserRouter([
         element: <PostCreate />,
       },
       {
-        path:"post/edit/:id",
-        element:<PostEdit/>
+        path: "post/edit/:id",
+        element: <PostEdit />,
       },
       {
-        path:"post/delete/:id",
-        element:<PostDelete/>,
-      }
+        path: "post/delete/:id",
+        element: <PostDelete />,
+      },
     ],
   },
 ]);

@@ -36,11 +36,11 @@ const PostDelete = () => {
   return (
     <button className="btn btn-danger" onClick={deletePost}>
       {loading && (
-                <div className="spinner-grow" role="status">
-                  <span className="visually-hidden">Loading...</span>
-                </div>
-              )}
-              {!loading && "Delete"}
+        <div className="spinner-grow" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      )}
+      {!loading && "Delete"}
     </button>
   );
 };
