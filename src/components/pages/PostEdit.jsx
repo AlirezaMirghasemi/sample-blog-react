@@ -11,55 +11,84 @@ const PostEdit = () => {
   const [postId, setPostId] = useState(useParams().id);
   const navigate = useNavigate();
 
+  const getPost = async () => {
+    try {
+      const response = await fetch(
+        `https://jsonplaceholder.typicode.com/posts/${postId}`
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const json = await response.json();
+      setPostTitle(json.title);
+      setPostContent(json.body);
+      setLoading(false);
+    } catch (error) {
+      setErrors(error.message);
+      setLoading(false);
+      Swal.fire({
+        title: "Error",
+        text: error.message,
+        icon: "warning",
+      });
+      navigate("/");
+    }
+  };
+
   useEffect(() => {
     if (postId) {
-      fetch(`https://jsonplaceholder.typicode.com/posts/${postId}`)
-        .then((response) => response.json())
-        .then((data) => {
-          setPostTitle(data.title);
-          setPostContent(data.body);
-          setLoading(false);
-        })
-        .catch((error) => {
-          setErrors(error);
-          setLoading(false);
-        });
+      getPost();
     }
-  }, []);
+  }, [postId]);
 
-  const editPost = (e) => {
+  const editPost = async (e) => {
     e.preventDefault();
     setPostTitle(e.target.postTitle.value);
     setPostContent(e.target.postContent.value);
     setLoading(true);
+    try {
+      const response = await fetch(
+        `https://jsonplaceholder.typicode.com/posts/${postId}`,
+        {
+          method: "PUT",
+          body: JSON.stringify({
+            id: postId,
+            title: postTitle,
+            body: postContent,
+            userId: 1,
+          }),
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      await response.json();
 
-    fetch(`https://jsonplaceholder.typicode.com/posts/${postId}`, {
-      method: "PUT",
-      body: JSON.stringify({
-        id: { postId },
-        title: { postTitle },
-        body: { postContent },
-        userId: 1,
-      }),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    })
-      .then((response) => response.json())
-      .then((json) => {
-        setLoading(false);
-        setErrors("");
-        Swal.fire({
-          title: "Success",
-          text: "Your post updated successfully!",
-          icon: "success",
-        });
-        navigate("/");
-      })
-      .catch((err) => {
+      setLoading(false);
+      setErrors("");
+      Swal.fire({
+        title: "Success",
+        text: "Your post updated successfully!",
+        icon: "success",
+      });
+    } catch {
+      (err) => {
         setErrors(err.message);
         setLoading(false);
-      });
+        setErrors(err.message);
+        setLoading(false);
+        Swal.fire({
+          title: "Error",
+          text: err.message,
+          icon: "warning",
+        });
+      };
+    } finally {
+      navigate("/");
+    }
   };
   return (
     <>
