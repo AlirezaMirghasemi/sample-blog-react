@@ -12,37 +12,43 @@ const PostCreate = () => {
   const [errors, setErrors] = useState(null);
 
   const navigate = useNavigate();
-  const createPost = (e) => {
+  const createPost = async (e) => {
     e.preventDefault();
     setPostTitle(e.target.postTitle.value);
     setPostContent(e.target.postContent.value);
     setLoading(true);
-    fetch("https://jsonplaceholder.typicode.com/posts", {
-      method: "POST",
-      body: JSON.stringify({
-        title: postTitle,
-        body: postContent,
-        userId: 1,
-      }),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    })
-      .then((response) => response.json())
-      .then((json) => {
-        setLoading(false);
-        setErrors("");
-        Swal.fire({
-          title: "Success",
-          text: "Your post create successfully!",
-          icon: "success",
-        });
-        navigate("/");
-      })
-      .catch((err) => {
-        setErrors(err.message);
-        setLoading(false);
+    try {
+      const response = await fetch(
+        "https://jsonplaceholder.typicode.com/posts",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            title: postTitle,
+            body: postContent,
+            userId: 1,
+          }),
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const json = await response.json();
+      setLoading(false);
+      setErrors("");
+      Swal.fire({
+        title: "Success",
+        text: "Your post create successfully!",
+        icon: "success",
       });
+    } catch (e) {
+      setErrors(e.message);
+      setLoading(false);
+    } finally {
+      navigate("/");
+    }
   };
   return (
     <>
