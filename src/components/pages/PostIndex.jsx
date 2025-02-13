@@ -12,13 +12,7 @@ const PostIndex = () => {
 
   const [currentPage, setCurrentPage] = useState(0);
   const postsPerPage = 10;
-  const pageCount = Math.ceil(posts.length / postsPerPage);
-
-  //   useEffect(() => {
-  //     getPostsApi();
-  //   }, []);
   useEffect(() => {
-    let isMounted = true;
     const getPostsApi = async () => {
       try {
         const response = await fetch(
@@ -28,7 +22,6 @@ const PostIndex = () => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const json = await response.json();
-
         setPosts(json);
       } catch (err) {
         setErrors(err);
@@ -37,10 +30,8 @@ const PostIndex = () => {
       }
     };
     getPostsApi();
-    return () => {
-      isMounted = false;
-    };
   }, []);
+  const pageCount = Math.ceil(posts.length / postsPerPage);
   const displayedPosts = posts.slice(
     currentPage * postsPerPage,
     (currentPage + 1) * postsPerPage
@@ -56,8 +47,9 @@ const PostIndex = () => {
           <div className="col-md-10 col-lg-8 col-xl-7">
             {loading && (
               <div className="spinner-grow text-success" role="status">
-                <span className="sr-only">Loading...</span>
+                <span className="sr-only"></span>
               </div>
+
             )}
             {errors && <div>Error: {errors.message}</div>}
             {posts.length === 0 && <div>No posts found.</div>}
